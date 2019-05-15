@@ -1,7 +1,5 @@
 const mongoose = require('mongoose');
 
-const createModels = require('./models');
-
 const dbName =
   process.env.NODE_ENV === 'development' ? 'database-test' : 'database';
 
@@ -15,7 +13,7 @@ const options = {
   reconnectInterval: 1000
 };
 
-module.exports = function createStore() {
+module.exports = (function dbConnect() {
   mongoose.connect(url, options);
 
   const db = mongoose.connection;
@@ -23,8 +21,4 @@ module.exports = function createStore() {
   db.once('open', function() {
     console.log('Connected to mongodb'); //eslint-disable-line
   });
-
-  const models = createModels(mongoose);
-
-  return models;
-};
+})();
