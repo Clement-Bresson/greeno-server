@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   Query: {
     comment: async (_, { _id }, { dataSources }) => {
       return await dataSources.commentAPI.findById(_id);

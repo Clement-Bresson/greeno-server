@@ -1,13 +1,13 @@
 const { DataSource } = require('apollo-datasource');
 
 class CommentAPI extends DataSource {
-  constructor({ store }) {
+  constructor({ models }) {
     super();
-    this.store = store;
+    this.models = models;
   }
 
   async findAll() {
-    const res = await this.store.Comment.find({})
+    const res = await this.models.Comment.find({})
       .populate()
       .exec();
     return res.map(u => ({
@@ -19,15 +19,15 @@ class CommentAPI extends DataSource {
   }
 
   async findById(_id) {
-    return await this.store.Comment.findOne({ _id }).exec();
+    return await this.models.Comment.findOne({ _id }).exec();
   }
 
   async findByAuthor(author) {
-    return await this.store.Comment.find({ author }).exec();
+    return await this.models.Comment.find({ author }).exec();
   }
 
   async create(comment) {
-    const newComment = await new this.store.Comment({
+    const newComment = await new this.models.Comment({
       text: comment.text,
       author: comment.author,
       post: comment.post
@@ -37,7 +37,7 @@ class CommentAPI extends DataSource {
   }
 
   async update({ _id, comment }) {
-    return await this.store.Comment.findByIdAndUpdate(
+    return await this.models.Comment.findByIdAndUpdate(
       _id,
       { $set: { ...comment } },
       { new: true }
@@ -45,7 +45,7 @@ class CommentAPI extends DataSource {
   }
 
   async delete(_id) {
-    return await this.store.Comment.findByIdAndDelete(_id).exec();
+    return await this.models.Comment.findByIdAndDelete(_id).exec();
   }
 }
 

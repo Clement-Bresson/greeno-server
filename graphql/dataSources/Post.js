@@ -1,42 +1,45 @@
 const { DataSource } = require('apollo-datasource');
 
 class PostAPI extends DataSource {
-  constructor({ store }) {
+  constructor({ models }) {
     super();
-    this.store = store;
+    this.models = models;
   }
 
   async findAll() {
-    const res = await this.store.Post.find({})
+    const res = await this.models.Post.find({})
       .populate()
       .exec();
-    return res.map(u => ({
-      _id: u._id.toString(),
-      title: u.title,
-      body: u.body,
-      published: u.published,
-      author: u.author,
-      comments: u.comments
-    }));
+    return res.map(u => {
+      console.log(u); //eslint-disable-line
+      return {
+        _id: u._id.toString(),
+        title: u.title,
+        body: u.body,
+        published: u.published,
+        author: u.author,
+        comments: u.comments
+      };
+    });
   }
 
   async findById(_id) {
-    return await this.store.Post.findOne({ _id }).exec();
+    return await this.models.Post.findOne({ _id }).exec();
   }
 
   async findByAuthor(author) {
-    return await this.store.Post.find({ author }).exec();
+    return await this.models.Post.find({ author }).exec();
   }
 
   async create(post) {
-    const newPost = await new this.store.Post({
+    const newPost = await new this.models.Post({
       title: post.title,
       body: post.body,
       published: post.published,
       author: post.author
     });
     const createdPost = await newPost.save();
-    const creator = await this.store.User.findById(post.author);
+    const creator = await this.models.User.findById(post.author);
     if (!creator) {
       throw new Error('User not found.');
     }
@@ -46,7 +49,7 @@ class PostAPI extends DataSource {
   }
 
   async update({ _id, post }) {
-    return await this.store.Post.findByIdAndUpdate(
+    return await this.models.Post.findByIdAndUpdate(
       _id,
       { $set: { ...post } },
       { new: true }
@@ -54,8 +57,8 @@ class PostAPI extends DataSource {
   }
 
   async delete(_id) {
-    const post = await this.store.Post.findById(_id);
-    const creator = await this.store.User.findById(post.author);
+    const post = await this.models.Post.findById(_id);
+    const creator = await this.models.User.findById(post.author);
     if (!creator) {
       throw new Error('user not found.');
     }
@@ -64,7 +67,7 @@ class PostAPI extends DataSource {
       creator.posts.splice(index, 1);
     }
     await creator.save();
-    return await this.store.Post.findByIdAndDelete(_id).exec();
+    return await this.models.Post.findByIdAndDelete(_id).exec();
   }
 }
 

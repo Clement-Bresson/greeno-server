@@ -1,5 +1,5 @@
-import mongoose from 'mongoose';
-import { ObjectID } from 'mongodb';
+const mongoose = require('mongoose');
+const { ObjectID } = require('mongodb');
 
 const Schema = mongoose.Schema;
 
@@ -22,4 +22,4 @@ const CommentSchema = new Schema({
   }
 });
 
-export default mongoose.model('Comment', CommentSchema);
+module.exports = mongoose.model('Comment', CommentSchema);

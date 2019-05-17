@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   Query: {
     post: async (_, { _id }, { dataSources }) => {
       return await dataSources.postAPI.findById(_id);

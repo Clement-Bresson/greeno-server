@@ -14,8 +14,28 @@ const dataSources = () => ({
   userAPI: new UserAPI({ models })
 });
 
-const server = new ApolloServer({ dataSources, resolvers, typeDefs });
+/* eslint-disable no-unused-vars */
+const context = async ({ req }) => {
+  // TODO: Use context for authentication (with info in req)
+  return {};
+};
+/* eslint-enable no-unused-vars */
+
+const server = new ApolloServer({ context, dataSources, resolvers, typeDefs });
 
 server.listen().then(({ url }) => {
   console.log(`🚀 Server ready at ${url}`); //eslint-disable-line
 });
+
+module.exports = {
+  dataSources,
+  context,
+  typeDefs,
+  resolvers,
+  ApolloServer,
+  CommentAPI,
+  PostAPI,
+  UserAPI,
+  models,
+  server
+};

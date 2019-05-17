@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   Query: {
     user: async (_, { _id }, { dataSources }) => {
       return await dataSources.userAPI.findById(_id);

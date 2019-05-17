@@ -1,13 +1,13 @@
 const { DataSource } = require('apollo-datasource');
 
 class UserAPI extends DataSource {
-  constructor({ store }) {
+  constructor({ models }) {
     super();
-    this.store = store;
+    this.models = models;
   }
 
   async findAll() {
-    const res = await this.store.User.find({})
+    const res = await this.models.User.find({})
       .populate()
       .exec();
     return res.map(u => ({
@@ -21,11 +21,11 @@ class UserAPI extends DataSource {
   }
 
   async findById(_id) {
-    return await this.store.User.findOne({ _id }).exec();
+    return await this.models.User.findOne({ _id }).exec();
   }
 
   async create(user) {
-    const newUser = await new this.store.User({
+    const newUser = await new this.models.User({
       name: user.name,
       email: user.email,
       age: user.age
@@ -35,7 +35,7 @@ class UserAPI extends DataSource {
   }
 
   async update({ _id, user }) {
-    return await this.store.User.findByIdAndUpdate(
+    return await this.models.User.findByIdAndUpdate(
       _id,
       { $set: { ...user } },
       { new: true }
@@ -43,7 +43,7 @@ class UserAPI extends DataSource {
   }
 
   async delete(_id) {
-    return await this.store.User.findByIdAndDelete(_id).exec();
+    return await this.models.User.findByIdAndDelete(_id).exec();
   }
 }
 
